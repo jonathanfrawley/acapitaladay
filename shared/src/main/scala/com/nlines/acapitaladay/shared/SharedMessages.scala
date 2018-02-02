@@ -1,4 +1,4 @@
-package com.9lines.acapitaladay.shared
+package com.nlines.acapitaladay.shared
 
 object SharedMessages {
   def itWorks = "It works!"

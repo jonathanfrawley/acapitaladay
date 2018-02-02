@@ -1,6 +1,6 @@
-package com.9lines.acapitaladay
+package com.nlines.acapitaladay
 
-import com.9lines.acapitaladay.shared.SharedMessages
+import com.nlines.acapitaladay.shared.SharedMessages
 import org.scalajs.dom
 
 object ScalaJSExample {

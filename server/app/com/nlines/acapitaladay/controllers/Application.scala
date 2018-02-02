@@ -1,8 +1,8 @@
-package com.9lines.acapitaladay.controllers
+package com.nlines.acapitaladay.controllers
 
 import javax.inject._
 
-import com.9lines.acapitaladay.shared.SharedMessages
+import com.nlines.acapitaladay.shared.SharedMessages
 import play.api.mvc._
 
 @Singleton

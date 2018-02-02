@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET        /                             com.9lines.acapitaladay.controllers.Application.index
+GET        /                             com.nlines.acapitaladay.controllers.Application.index
 
 # Prefix must match `play.assets.urlPrefix`
 GET        /assets/*file                 controllers.Assets.at(file)
