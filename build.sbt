@@ -26,6 +26,12 @@ lazy val shared = (crossProject.crossType(CrossType.Pure) in file("shared")).set
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
+lazy val scripts = (project in file("scripts")).settings(
+  libraryDependencies ++= Seq(
+    "net.ruippeixotog" %% "scala-scraper" % "2.1.0"
+  )
+)
+
 lazy val commonSettings = Seq(
   scalaVersion := "2.12.4",
   organization := "com.9lines"
