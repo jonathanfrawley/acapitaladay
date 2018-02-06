@@ -37,7 +37,7 @@ object DownloadFlags {
     e.flatMap(_ >?> attr("src"))
   }
 
-  def parseCapital(doc: Document): String = {
+  def parseCapital(doc: Document, countryName: String): String = {
     //val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(6) > td > a"))
     //val e = (doc >?> element("table.infobox:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(2) > a:nth-child(1)"))
     //val f = e.orElse(doc >?> element("table.infobox:nth-child(2) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(2) > a:nth-child(1)"))
@@ -46,7 +46,8 @@ object DownloadFlags {
 
     //val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(6) > td > a"))
 
-    println(s"doc : ${doc}")
+    //println(s"doc : ${doc}")
+    println(s"countryName : ${countryName}")
     val trs = (doc >> elementList("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr"))
     trs.map(tr => {
       if(tr.children.toList.head.text.contains("Capital")) Some((tr >> element("td > a")).text)
@@ -67,16 +68,16 @@ object DownloadFlags {
 
     //println(s"DOC: ${doc}")
 
-    val countryNames = parseCountryNames(doc).slice(1, 10)
+    val countryNames = parseCountryNames(doc).slice(1, 150)
 
-    val countryUrls = parseCountryUrls(doc).slice(1,10)
+    val countryUrls = parseCountryUrls(doc).slice(1,150)
     //println(s"cUrls : ${countryUrls}")
 
     val cDocs = countryUrls.map(browser.get(_))
     val flagSrcs = cDocs.map(parseFlagSrc)
     //println(s"flagSrcs : ${flagSrcs}")
 
-    val capitals = cDocs.map(parseCapital)
+    val capitals = cDocs.zip(countryNames).map(x => parseCapital(x._1, x._2))
     //println(s"capitals : ${capitals}")
 
     println("countryUrl,flagSrc,countryName,capital")
