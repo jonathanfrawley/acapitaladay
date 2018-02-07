@@ -48,9 +48,14 @@ object DownloadFlags {
 
     //println(s"doc : ${doc}")
     println(s"countryName : ${countryName}")
+
+    //"#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(5) > td > a"
     val trs = (doc >> elementList("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr"))
+    println(s"trs : ${trs}")
     trs.map(tr => {
-      if(tr.children.toList.head.text.contains("Capital")) Some((tr >> element("td > a")).text)
+      //if(tr.children.toList.head.text.contains("Capital")) Some((tr >> element("td > a")).text)
+      println(s"tr : ${tr.text}")
+      if(tr.text.contains("Capital")) (tr >?> text("td > a"))
       else None
     }).flatten.head
   }
