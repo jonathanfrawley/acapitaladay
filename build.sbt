@@ -28,7 +28,8 @@ lazy val sharedJs = shared.js
 
 lazy val scripts = (project in file("scripts")).settings(
   libraryDependencies ++= Seq(
-    "net.ruippeixotog" %% "scala-scraper" % "2.1.0"
+    "net.ruippeixotog" %% "scala-scraper" % "2.1.0",
+    "com.typesafe.play" %% "play-json" % "2.6.6"
   )
 )
 

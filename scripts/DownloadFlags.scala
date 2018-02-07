@@ -3,6 +3,7 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.model.Document
+import play.api.libs.json._
 
 object DownloadFlags {
   val browser = JsoupBrowser()
@@ -88,11 +89,21 @@ object DownloadFlags {
     println("countryUrl,flagSrc,countryName,capital")
     //for((countryUrl, flagSrc, countryName, capital)  <- (countryUrls, flagSrcs, countryNames, capitals).zipped) {
     var i = 0
+    val jsonList: scala.collection.mutable.ArrayBuffer[JsObject] = scala.collection.mutable.ArrayBuffer()
     while(i < capitals.length) {
       val (countryUrl, flagSrc, countryName, capital) = (countryUrls(i), flagSrcs(i), countryNames(i), capitals(i))
       println(s"${countryUrl},${flagSrc},${countryName},${capital}")
+      val j = Json.obj(
+        "countryUrl" -> countryUrl,
+        "flagSrc" -> flagSrc,
+        "countryName" -> countryName,
+        "capital" -> capital
+      )
+      jsonList += j
       i += 1
     }
+
+    println(s"json: ${Json.arr(jsonList).toString}")
 
     /*
     val countryNameFlagSrcs = parseCountryNames(doc).zip(parseFlagSrcs(doc))
