@@ -103,7 +103,13 @@ object DownloadFlags {
       i += 1
     }
 
-    println(s"json: ${Json.arr(jsonList).toString}")
+    val jsonString = JsArray(jsonList.toList).toString
+    println(s"json: ${jsonString}")
+    //new PrintWriter(") { write(Json.arr(jsonList).toString); close }
+    import java.nio.file.{Paths, Files}
+    import java.nio.charset.StandardCharsets
+
+    Files.write(Paths.get("server/public/json/countries.json"), jsonString.getBytes(StandardCharsets.UTF_8))
 
     /*
     val countryNameFlagSrcs = parseCountryNames(doc).zip(parseFlagSrcs(doc))
