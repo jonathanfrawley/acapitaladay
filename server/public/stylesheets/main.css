@@ -1,11 +1,19 @@
+/*
 body {
   padding-top: 50px;
 }
-.starter-template {
+.centered-col {
   padding: 40px 15px;
+  float:none;
+  margin: 0 auto;
   text-align: center;
 }
 
 #flagImg {
     width: 30%;
 }
+
+.main-panel {
+    text-align: left;
+}
+*/

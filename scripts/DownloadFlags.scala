@@ -35,7 +35,7 @@ object DownloadFlags {
     val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div > div:nth-child(1) > div:nth-child(1) > a > img"))
     //#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div > div:nth-child(1) > div:nth-child(1) > a > img
     //t.map(_ >> attr("src"))
-    e.flatMap(_ >?> attr("src"))
+    e.flatMap(x => (x >?> attr("src")).map((_.replaceAll("thumb/", "").split("/125px")(0))))
   }
 
   def parseCapital(doc: Document, countryName: String): String = {

@@ -2,12 +2,81 @@
 
 @main("Learn a country a day!") {
 
+<!--
 <div class="container">
-  <div class="starter-template">
-    <!--<img id="flagImg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Flag_of_Albania.svg/125px-Flag_of_Albania.svg.png">-->
-    <img id="flagImg">
-    <h1 id="countryName"></h1>
-    <h2>Capital: <emph id="capital"></emph></h2>
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col-6">
+        <p class="text-center">One of three columns</p>
+
+    </div>
+    <div class="col">
+    </div>
   </div>
-</div><!-- /.container -->
+</div>
+-->
+
+<div class="container">
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-sm-5">
+      <div class="row">
+        <div class="col text-center">
+          <!--<img id="flagImg" class="img-fluid rounded">-->
+          <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Flag_of_Albania.svg" class="img-fluid rounded" width="400px">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <a id="countryLink"><h4 id="countryName"></h4></a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <h5>Capital: <emph id="capital">???</emph></h5>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col text-center">
+          <button id="capitalButton" type="button" class="button">I give up</button>
+        </div>
+      </div>
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+<!--
+<div class="grid-container">
+  <div class="grid-x grid-margin-x">
+    <div class="large-3 large-offset-3 cell">
+      <img id="flagImg" alt="Card image cap">
+    </div>
+    <div class="cell">
+      <a id="countryLink"><h4 id="countryName"></h4></a>
+    </div>
+    <div class="cell">
+      <h5>Capital: <emph id="capital">???</emph></h5>
+    </div>
+
+    <form>
+      <div class="large-3 columns">
+        <label for="right-label" class="right">Label</label>
+      </div>
+      <div class="large-3 columns">
+        <input type="text" id="right-label" placeholder="Inline Text Input">
+      </div>
+    </form>
+
+    <div class="cell">
+      <button id="capitalButton" type="button" class="button">I give up</button>
+    </div>
+  </div>
+</div>
+    -->
+
+
+
 }

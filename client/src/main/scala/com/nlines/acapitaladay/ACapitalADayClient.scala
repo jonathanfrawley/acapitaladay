@@ -9,7 +9,7 @@ import org.scalajs.dom.ext.Ajax
 
 import scala.scalajs.js
 import scala.scalajs.js.JSON
-
+import org.scalajs.jquery.jQuery
 
 @js.native
 trait CountryMetadata extends js.Object {
@@ -47,9 +47,11 @@ object ACapitalADayClient {
       val idx = (newDate.toEpochDay() - oldDate.toEpochDay()).toInt
       dom.document.getElementById("flagImg").setAttribute("src", metadata(idx).flagSrc)
       dom.document.getElementById("countryName").textContent = metadata(idx).countryName
-      dom.document.getElementById("countryName").setAttribute("href", metadata(idx).countryUrl)
-      dom.document.getElementById("capital").textContent = metadata(idx).capital
+      dom.document.getElementById("countryLink").setAttribute("href", metadata(idx).countryUrl)
 
+      jQuery("#capitalButton").on("click", () =>
+        dom.document.getElementById("capital").textContent = metadata(idx).capital
+      )
       //val metadata: Seq[CountryMetadata] = (JSON.parse(r.responseText).asInstanceOf[js.Array[js.Dynamic]]).map (_.asInstanceOf[CountryMetadata] )
     }
   }
