@@ -26,6 +26,9 @@ trait CountryMetadata extends js.Object {
 object ACapitalADayClient {
 
   val capital: Var[String] = Var[String]("")
+  val sealedCapital: Var[String] = Var[String]("")
+  val capitalGuess: Var[String] = Var[String]("")
+  val capitalGuessBoxClass: Var[String] = Var[String]("form-control is-valid")
 
 
   // TODO: Change this to be more clever
@@ -41,6 +44,26 @@ object ACapitalADayClient {
     <div class="row">
       <div class="col text-center">
         <h5>{ capital.bind }</h5>
+      </div>
+    </div>
+  }
+
+  @dom
+  def capitalGuessDiv: Binding[Div] = {
+    //val capitalStr = capital.value
+    //val capitalGuessStr = capitalGuess.value
+    //val classes = if(capitalStr.startsWith(capitalGuessStr)) "form-control is-valid" else "form-control is-invalid"
+    <div class="row">
+      <div class="col text-center">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend is-invalid">
+            <span class="input-group-text">Capital</span>
+          </div>
+          <input id="capitalGuessBox" type="text" class={capitalGuessBoxClass.bind} data:aria-label="Username" data:aria-describedby="basic-addon1" oninput={event: Event =>
+            capitalGuess := capitalGuessBox.value
+            if(sealedCapital.value.startsWith(capitalGuessBox.value)) capitalGuessBoxClass := "form-control is-valid" else capitalGuessBoxClass := "form-control is-invalid"
+          }/>
+        </div>
       </div>
     </div>
   }
@@ -63,6 +86,7 @@ object ACapitalADayClient {
         val countryName: String = metadata(idx).countryName
         val capitalName: String = metadata(idx).capital
         val countryUrl: String = metadata(idx).countryUrl
+        sealedCapital := capitalName
 
         <div class="container">
           <div class="row">
@@ -80,23 +104,13 @@ object ACapitalADayClient {
                 </div>
               </div>
               { capitalDiv.bind }
-              <div class="row">
-                <div class="col text-center">
-
-                  <div class="input-group input-group-sm mb-3">
-                    <div class="input-group-prepend is-invalid">
-                      <span class="input-group-text">Capital</span>
-                    </div>
-                    <input type="text" class="form-control is-invalid" data:aria-label="Username" data:aria-describedby="basic-addon1" />
-                  </div>
-                </div>
-              </div>
+              { capitalGuessDiv.bind }
               <div class="row">
                 <div class="col text-center">
                   <button type="button"
                           class="button"
                           onclick={ event: Event =>
-                          capital := capitalName
+                            capital := capitalName
                           }>I give up</button>
                 </div>
               </div>
