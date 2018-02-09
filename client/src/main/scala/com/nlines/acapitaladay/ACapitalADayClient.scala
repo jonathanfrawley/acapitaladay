@@ -50,7 +50,7 @@ object ACapitalADayClient {
       dom.document.getElementById("countryLink").setAttribute("href", metadata(idx).countryUrl)
 
       jQuery("#capitalButton").on("click", () =>
-        dom.document.getElementById("capital").textContent = metadata(idx).capital
+        dom.document.getElementById("capital").textContent = s"Capital: ${metadata(idx).capital}"
       )
       //val metadata: Seq[CountryMetadata] = (JSON.parse(r.responseText).asInstanceOf[js.Array[js.Dynamic]]).map (_.asInstanceOf[CountryMetadata] )
     }
