@@ -7,7 +7,7 @@ Built entierly in Scala using the [Play Framework](https://www.playframework.com
 ## Running
 To start with, you will need SBT installed. Go [here](https://www.scala-sbt.org/download.html) and follow the instructions for your platform.
 
-Once SBT is installed, you can run the application in dev mode (automatically rebuilds Scala and Scala.JS code on reload):
+Once SBT is installed, you can run the application in dev mode (automatically rebuilds Scala and Scala.JS code on page load):
 
     sbt run
 
