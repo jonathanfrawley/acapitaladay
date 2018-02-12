@@ -4,10 +4,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import com.thoughtworks.binding.Binding.{BindingSeq, Var, Vars}
+import com.thoughtworks.binding.Binding.{BindingSeq, Constants, Var, Vars}
 import com.thoughtworks.binding.{Binding, dom}
 import com.thoughtworks.binding.FutureBinding
-import org.scalajs.dom.Event
+import org.scalajs.dom.{Event, Node}
 import org.scalajs.dom.ext.Ajax
 import org.scalajs.dom.html.{Div, Input, Table}
 
@@ -15,13 +15,33 @@ import scala.scalajs.js
 import scala.scalajs.js.JSON
 import scala.util.{Failure, Success}
 
-@js.native
+
+object CountryMetadata {
+  def empty = js.Dynamic.literal(countryUrl="empty",flagSrc="",countryName="",capital="").asInstanceOf[CountryMetadata]
+}
+
+sealed trait CountryMetadataType {}
+case class EmptyCountryMetadataType() extends CountryMetadataType
+case class ValidCountryMetadataType() extends CountryMetadataType
+
 trait CountryMetadata extends js.Object {
   val countryUrl: String = js.native
   val flagSrc: String = js.native
   val countryName: String = js.native
   val capital: String = js.native
+  //val `type`: CountryMetadataType = ValidCountryMetadataType()
 }
+
+/*
+@js.native
+class EmptyCountryMetadata extends CountryMetadata {
+  override val countryUrl: String = ""
+  override val flagSrc: String = ""
+  override val countryName: String = ""
+  override val capital: String = ""
+  override val `type`: CountryMetadataType = EmptyCountryMetadataType()
+}
+*/
 
 object ACapitalADayClient {
 
@@ -30,6 +50,7 @@ object ACapitalADayClient {
   val capitalGuess: Var[String] = Var[String]("")
   val capitalGuessBoxClass: Var[String] = Var[String]("form-control is-valid")
   val won: Var[Boolean] = Var[Boolean](false)
+  val metadata: Var[js.Array[CountryMetadata]] = Var[js.Array[CountryMetadata]](js.Array())
 
 
   // TODO: Change this to be more clever
@@ -98,6 +119,66 @@ object ACapitalADayClient {
     } else <div class="row"></div>
   }
 
+  /*
+  def flagImgs(metadata: js.Array[CountryMetadata]): Seq[Div] = {
+    for (row <- metadata) yield {
+      <div class="col col-xs-7 px-0">
+        <img src={row.flagSrc} class="img-thumbnail"></img>
+      </div>
+    }
+  }
+  */
+
+  @dom
+  def flagImgDiv(countryMetadata: CountryMetadata): Binding[Div] =
+    if(countryMetadata.countryUrl == "empty") {
+      <div class="w-100"></div>
+    } else {
+      <div class="col col-xs-7 px-0">
+        <img src={countryMetadata.flagSrc} class="img-thumbnail"></img>
+      </div>
+    }
+
+  @dom
+  def flagDiv(): Binding[Div] = {
+    /*
+    <div class="row mt-3">
+      {
+        var i = 0
+        (for (row <- Constants(metadata.bind: _*)) yield {
+          i += 1
+          flagImgDiv(row.flagSrc, i).bind
+        })
+      }
+    </div>
+    */
+    //val groups: BindingSeq[CountryMetadata] = Constants(metadata.bind: _*)
+    val groups: Seq[js.Array[CountryMetadata]] = metadata.value.grouped(7).toSeq
+    val results: Seq[CountryMetadata] = groups.foldLeft(Seq[CountryMetadata]())(
+      (resultSoFar: Seq[CountryMetadata], array: js.Array[CountryMetadata]) =>
+        resultSoFar ++ Seq(CountryMetadata.empty) ++ array)
+
+    <div class="row align-items-center mt-3">
+      {
+      /*
+        (for (group <- groups) yield {
+          for (row <- group) yield flagImgDiv(row.flagSrc).bind
+        }).flatten
+        */
+        (for (row <- Constants(results: _*)) yield {
+          flagImgDiv(row).bind
+        })
+      }
+    </div>
+    /*
+    <div class="row mt-3">
+      <div class="col col-xs-7 px-0">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Flag_of_Albania.svg" class="img-thumbnail"></img>
+      </div>
+    </div>
+    */
+  }
+
   @dom
   def table: Binding[Div] = {
     FutureBinding(Ajax.get("/assets/json/countries.json")).bind match {
@@ -106,16 +187,16 @@ object ACapitalADayClient {
       case Some(Failure(resp)) =>
         <div><p>Failure</p></div>
       case Some(Success(resp)) =>
-        val metadata = JSON.parse(resp.responseText).asInstanceOf[js.Array[CountryMetadata]]
+        metadata := JSON.parse(resp.responseText).asInstanceOf[js.Array[CountryMetadata]]
         ///dom.document.getElementById("scalajsShoutOut").textContent = metadata.head.countryUrl
         //println(metadata.head.countryUrl)
         //println(metadata.head.countryUrl)
         //dom.document.getElementById("scalajsShoutOut").textContent = "blah"
         val idx = (newDate.toEpochDay() - oldDate.toEpochDay()).toInt
-        val flagSrc = metadata(idx).flagSrc
-        val countryName: String = metadata(idx).countryName
-        val capitalName: String = metadata(idx).capital
-        val countryUrl: String = metadata(idx).countryUrl
+        val flagSrc = metadata.value(idx).flagSrc
+        val countryName: String = metadata.value(idx).countryName
+        val capitalName: String = metadata.value(idx).capital
+        val countryUrl: String = metadata.value(idx).countryUrl
         correctCapital := capitalName
 
         <div class="container">
@@ -140,6 +221,9 @@ object ACapitalADayClient {
             <div class="col">
             </div>
           </div>
+
+          <!-- Image stuff-->
+          { flagDiv.bind }
         </div>
     }
   }
