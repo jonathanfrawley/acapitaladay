@@ -9,7 +9,7 @@ import com.thoughtworks.binding.{Binding, dom}
 import com.thoughtworks.binding.FutureBinding
 import org.scalajs.dom.Event
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.html.{Div, Table}
+import org.scalajs.dom.html.{Div, Input, Table}
 
 import scala.scalajs.js
 import scala.scalajs.js.JSON
@@ -26,9 +26,10 @@ trait CountryMetadata extends js.Object {
 object ACapitalADayClient {
 
   val capital: Var[String] = Var[String]("")
-  val sealedCapital: Var[String] = Var[String]("")
+  val correctCapital: Var[String] = Var[String]("")
   val capitalGuess: Var[String] = Var[String]("")
   val capitalGuessBoxClass: Var[String] = Var[String]("form-control is-valid")
+  val won: Var[Boolean] = Var[Boolean](false)
 
 
   // TODO: Change this to be more clever
@@ -49,23 +50,52 @@ object ACapitalADayClient {
   }
 
   @dom
+  def capitalGuessBoxInput: Binding[Input] = {
+    <input id="capitalGuessBox" type="text" class={capitalGuessBoxClass.bind} data:aria-label="Username" data:aria-describedby="basic-addon1" disabled={won.bind} oninput={ event: Event =>
+      capitalGuess := capitalGuessBox.value
+      if (correctCapital.value.equalsIgnoreCase(capitalGuess.value)) {
+        won := true
+        capital := correctCapital.value
+      }
+      val newClass = if (correctCapital.value.toLowerCase.startsWith(capitalGuessBox.value.toLowerCase)) "form-control is-valid"
+      else "form-control is-invalid"
+      capitalGuessBoxClass := newClass
+    }/>
+  }
+
+  @dom
   def capitalGuessDiv: Binding[Div] = {
     //val capitalStr = capital.value
     //val capitalGuessStr = capitalGuess.value
     //val classes = if(capitalStr.startsWith(capitalGuessStr)) "form-control is-valid" else "form-control is-invalid"
-    <div class="row">
-      <div class="col text-center">
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend is-invalid">
-            <span class="input-group-text">Capital</span>
+    if(! won.bind) {
+      <div class="row">
+        <div class="col text-center">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend is-invalid">
+              <span class="input-group-text">Capital</span>{capitalGuessBoxInput.bind}
+            </div>
           </div>
-          <input id="capitalGuessBox" type="text" class={capitalGuessBoxClass.bind} data:aria-label="Username" data:aria-describedby="basic-addon1" oninput={event: Event =>
-            capitalGuess := capitalGuessBox.value
-            if(sealedCapital.value.startsWith(capitalGuessBox.value)) capitalGuessBoxClass := "form-control is-valid" else capitalGuessBoxClass := "form-control is-invalid"
-          }/>
         </div>
       </div>
-    </div>
+    } else {
+      <div></div>
+    }
+  }
+
+  @dom
+  def giveUpButton(capitalName: String): Binding[Div] = {
+    if(! won.bind) {
+      <div class="row">
+        <div class="col text-center">
+          <button type="button"
+                  class="button"
+                  onclick={event: Event =>
+                    won := true
+                    capital := capitalName }>I give up</button>
+        </div>
+      </div>
+    } else <div class="row"></div>
   }
 
   @dom
@@ -86,7 +116,7 @@ object ACapitalADayClient {
         val countryName: String = metadata(idx).countryName
         val capitalName: String = metadata(idx).capital
         val countryUrl: String = metadata(idx).countryUrl
-        sealedCapital := capitalName
+        correctCapital := capitalName
 
         <div class="container">
           <div class="row">
@@ -105,15 +135,7 @@ object ACapitalADayClient {
               </div>
               { capitalDiv.bind }
               { capitalGuessDiv.bind }
-              <div class="row">
-                <div class="col text-center">
-                  <button type="button"
-                          class="button"
-                          onclick={ event: Event =>
-                            capital := capitalName
-                          }>I give up</button>
-                </div>
-              </div>
+              { giveUpButton(capitalName).bind }
             </div>
             <div class="col">
             </div>
