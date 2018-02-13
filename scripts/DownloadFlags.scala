@@ -27,7 +27,23 @@ object DownloadFlags {
 
   def parseFlagSrc(doc: Document): Option[String] = {
     val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div > div:nth-child(1) > div:nth-child(1) > a > img"))
-    e.flatMap(x => (x >?> attr("src")).map((_.replaceAll("thumb/", "").split("/125px")(0))))
+                              //#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div:nth-child(1) > div > a > img
+
+
+
+    e.flatMap(x => (x >?> attr("src")).map { x =>
+      val replaced = x.replaceAll("thumb/", "")
+      val splitStr = if(replaced.contains("125px")) "/125px" else "/102px"
+      replaced.split(splitStr)(0)
+    }).orElse {
+      val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div:nth-child(1) > div > a > img")).flatMap { x =>
+        (x >?> attr("src")).map { x =>
+          (x.replaceAll("thumb/", "").split("/125px")(0))
+        }
+      }
+      println(s"e : ${e}")
+      e
+    }
   }
 
   def parseCapital(doc: Document, countryName: String): String = {
@@ -54,7 +70,7 @@ object DownloadFlags {
     val jsonList: scala.collection.mutable.ArrayBuffer[JsObject] = scala.collection.mutable.ArrayBuffer()
     while(i < capitals.length) {
       val (countryUrl, flagSrc, countryName, capital) = (countryUrls(i), flagSrcs(i), countryNames(i), capitals(i))
-      println(s"${countryUrl},${flagSrc},${countryName},${capital}")
+      //println(s"${countryUrl},${flagSrc},${countryName},${capital}")
       val j = Json.obj(
         "countryUrl" -> countryUrl,
         "flagSrc" -> flagSrc,

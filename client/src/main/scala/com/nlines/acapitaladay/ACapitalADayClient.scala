@@ -18,6 +18,7 @@ import scala.util.{Failure, Success}
 
 object CountryMetadata {
   def empty = js.Dynamic.literal(countryUrl="empty",flagSrc="",countryName="",capital="").asInstanceOf[CountryMetadata]
+  def endLine = js.Dynamic.literal(countryUrl="endLine",flagSrc="",countryName="",capital="").asInstanceOf[CountryMetadata]
 }
 
 trait CountryMetadata extends js.Object {
@@ -100,11 +101,15 @@ object ACapitalADayClient {
 
   @dom
   def flagImgDiv(countryMetadata: CountryMetadata): Binding[Div] =
-    if(countryMetadata.countryUrl == "empty") {
+    if(countryMetadata.countryUrl == "endLine") {
       <div class="w-100"></div>
+    } else if(countryMetadata.countryUrl == "empty") {
+      <div class="col col-xs-7 px-0">
+      </div>
     } else {
       <div class="col col-xs-7 px-0">
-        <img src={countryMetadata.flagSrc} class="img-thumbnail"></img>
+        <!--<img src={countryMetadata.flagSrc} class="img-thumbnail"  style="height: 100px;"></img>-->
+        <img src={countryMetadata.flagSrc} class="img-thumbnail" style="max-height: 120px;"></img>
       </div>
     }
 
@@ -112,10 +117,11 @@ object ACapitalADayClient {
   def flagDiv(): Binding[Div] = {
     val groups: Seq[js.Array[CountryMetadata]] = metadata.value.grouped(7).toSeq
     val results: Seq[CountryMetadata] = groups.foldLeft(Seq[CountryMetadata]())(
-      (resultSoFar: Seq[CountryMetadata], array: js.Array[CountryMetadata]) =>
-        resultSoFar ++ Seq(CountryMetadata.empty) ++ array)
+      (resultSoFar: Seq[CountryMetadata], array: js.Array[CountryMetadata]) => {
+        resultSoFar ++ Seq(CountryMetadata.endLine) ++ array.toSeq.padTo(7, CountryMetadata.empty)
+      })
 
-    <div class="row align-items-center mt-3">
+    <div class="row mt-3">
       {
         (for (row <- Constants(results: _*)) yield {
           flagImgDiv(row).bind
@@ -164,7 +170,7 @@ object ACapitalADayClient {
           </div>
 
           <!-- Image stuff: Disabled as not finished. -->
-          <!-- { flagDiv.bind } -->
+          { flagDiv.bind }
         </div>
     }
   }
