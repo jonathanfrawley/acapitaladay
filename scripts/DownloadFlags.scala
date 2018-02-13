@@ -57,9 +57,9 @@ object DownloadFlags {
   def main(args: Array[String]): Unit = {
     val doc = browser.get("https://en.wikipedia.org/wiki/Member_states_of_the_United_Nations")
 
-    val countryNames = parseCountryNames(doc).slice(1, 150)
+    val countryNames = parseCountryNames(doc)
 
-    val countryUrls = parseCountryUrls(doc).slice(1,150)
+    val countryUrls = parseCountryUrls(doc)
 
     val cDocs = countryUrls.map(browser.get(_))
     val flagSrcs = cDocs.map(parseFlagSrc)

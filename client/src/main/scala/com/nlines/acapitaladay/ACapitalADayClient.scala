@@ -29,12 +29,12 @@ trait CountryMetadata extends js.Object {
 }
 
 object ACapitalADayClient {
-  val capital: Var[String] = Var[String]("")
+  val capital: Array[Var[String]] = Array.fill(193)(Var[String](""))
   val correctCapital: Var[String] = Var[String]("")
-  val capitalGuess: Var[String] = Var[String]("")
+  val capitalGuess: Array[Var[String]] = Array.fill(193)(Var[String](""))
   val capitalGuessBoxClass: Var[String] = Var[String]("form-control is-valid")
-  val won: Var[Boolean] = Var[Boolean](false)
   val metadata: Var[js.Array[CountryMetadata]] = Var[js.Array[CountryMetadata]](js.Array())
+  val index: Var[Int] = Var[Int](-1)
 
   // TODO: Change this to be more clever
   val startDate = "2017-11-18"
@@ -47,18 +47,17 @@ object ACapitalADayClient {
   def capitalDiv: Binding[Div] = {
     <div class="row">
       <div class="col text-center">
-        <h5>{ capital.bind }</h5>
+        <h5>{ capital(index.bind).bind }</h5>
       </div>
     </div>
   }
 
   @dom
   def capitalGuessBoxInput: Binding[Input] = {
-    <input id="capitalGuessBox" type="text" class={capitalGuessBoxClass.bind} data:aria-label="Username" data:aria-describedby="basic-addon1" disabled={won.bind} oninput={ event: Event =>
-      capitalGuess := capitalGuessBox.value
-      if (correctCapital.value.equalsIgnoreCase(capitalGuess.value)) {
-        won := true
-        capital := correctCapital.value
+    <input id="capitalGuessBox" type="text" class={capitalGuessBoxClass.bind} data:aria-label="Username" data:aria-describedby="basic-addon1" disabled={capital(index.bind).bind == correctCapital.bind} oninput={ event: Event =>
+      capitalGuess(index.value) := capitalGuessBox.value
+      if (correctCapital.value.equalsIgnoreCase(capitalGuess(index.value).value)) {
+        capital(index.value) := correctCapital.value
       }
       val newClass = if (correctCapital.value.toLowerCase.startsWith(capitalGuessBox.value.toLowerCase)) "form-control is-valid"
       else "form-control is-invalid"
@@ -68,7 +67,7 @@ object ACapitalADayClient {
 
   @dom
   def capitalGuessDiv: Binding[Div] = {
-    if(! won.bind) {
+    if(capital(index.bind).bind != correctCapital.bind) {
       <div class="row">
         <div class="col text-center">
           <div class="input-group input-group-sm mb-3">
@@ -86,14 +85,14 @@ object ACapitalADayClient {
 
   @dom
   def giveUpButton(capitalName: String): Binding[Div] = {
-    if(! won.bind) {
+    if(capital(index.bind).bind != correctCapital.bind) {
       <div class="row">
         <div class="col text-center">
           <button type="button"
                   class="button"
                   onclick={event: Event =>
-                    won := true
-                    capital := capitalName }>I give up</button>
+                    capital(index.value) := correctCapital.value
+                    }>I give up</button>
         </div>
       </div>
     } else <div class="row"></div>
@@ -107,8 +106,9 @@ object ACapitalADayClient {
       <div class="col col-xs-7 px-0">
       </div>
     } else {
-      <div class="col col-xs-7 px-0">
-        <a href={s"/country/${idx}"}>
+      <div class="col col-xs-7 px-0" >
+        <!--<a href={s"/country/${idx}"}>-->
+        <a href="#" onclick={event: Event => index := idx }>
           <img src={countryMetadata.flagSrc} class="img-thumbnail" style="max-height: 120px;"></img>
         </a>
       </div>
@@ -134,7 +134,7 @@ object ACapitalADayClient {
   }
 
   @dom
-  def mainElement(index: Int): Binding[Div] = {
+  def mainElement(): Binding[Div] = {
     FutureBinding(Ajax.get("/assets/json/countries.json")).bind match {
       case None =>
         <div><p>Loading...</p></div>
@@ -143,7 +143,7 @@ object ACapitalADayClient {
       case Some(Success(resp)) =>
         metadata := JSON.parse(resp.responseText).asInstanceOf[js.Array[CountryMetadata]]
 
-        val idx = if (index == -1) (newDate.toEpochDay() - oldDate.toEpochDay()).toInt else index
+        val idx = if (index.bind == -1) (newDate.toEpochDay() - oldDate.toEpochDay()).toInt else index.bind
         val flagSrc = metadata.value(idx).flagSrc
         val countryName: String = metadata.value(idx).countryName
         val capitalName: String = metadata.value(idx).capital
@@ -180,6 +180,7 @@ object ACapitalADayClient {
   }
 
   def main(args: Array[String]): Unit = {
-    dom.render(org.scalajs.dom.document.body, mainElement(js.Dynamic.global.window.index.asInstanceOf[Int]))
+    index := js.Dynamic.global.window.index.asInstanceOf[Int]
+    dom.render(org.scalajs.dom.document.body, mainElement)
   }
 }
