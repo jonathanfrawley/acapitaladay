@@ -100,7 +100,7 @@ object ACapitalADayClient {
   }
 
   @dom
-  def flagImgDiv(countryMetadata: CountryMetadata): Binding[Div] =
+  def flagImgDiv(idx: Int, countryMetadata: CountryMetadata): Binding[Div] =
     if(countryMetadata.countryUrl == "endLine") {
       <div class="w-100"></div>
     } else if(countryMetadata.countryUrl == "empty") {
@@ -108,8 +108,9 @@ object ACapitalADayClient {
       </div>
     } else {
       <div class="col col-xs-7 px-0">
-        <!--<img src={countryMetadata.flagSrc} class="img-thumbnail"  style="height: 100px;"></img>-->
-        <img src={countryMetadata.flagSrc} class="img-thumbnail" style="max-height: 120px;"></img>
+        <a href={s"/country/${idx}"}>
+          <img src={countryMetadata.flagSrc} class="img-thumbnail" style="max-height: 120px;"></img>
+        </a>
       </div>
     }
 
@@ -121,10 +122,12 @@ object ACapitalADayClient {
         resultSoFar ++ Seq(CountryMetadata.endLine) ++ array.toSeq.padTo(7, CountryMetadata.empty)
       })
 
+    var idx = -1
     <div class="row mt-3">
       {
         (for (row <- Constants(results: _*)) yield {
-          flagImgDiv(row).bind
+          if(!row.countryUrl.startsWith("endLine") && !row.countryUrl.startsWith("empty")) idx += 1
+          flagImgDiv(idx, row).bind
         })
       }
     </div>
