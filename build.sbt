@@ -23,7 +23,7 @@ lazy val client = (project in file("client")).settings(commonSettings).settings(
     "com.thoughtworks.binding" %%% "dom" % "latest.release",
     "com.thoughtworks.binding" %%% "binding" % "latest.release",
     "com.thoughtworks.binding" %%% "futurebinding" % "latest.release",
-      compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+    compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
   )
 ).enablePlugins(ScalaJSPlugin, ScalaJSWeb).dependsOn(sharedJs)
 

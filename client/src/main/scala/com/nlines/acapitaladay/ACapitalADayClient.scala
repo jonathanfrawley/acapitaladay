@@ -134,7 +134,7 @@ object ACapitalADayClient {
   }
 
   @dom
-  def mainElement: Binding[Div] = {
+  def mainElement(index: Int): Binding[Div] = {
     FutureBinding(Ajax.get("/assets/json/countries.json")).bind match {
       case None =>
         <div><p>Loading...</p></div>
@@ -142,7 +142,8 @@ object ACapitalADayClient {
         <div><p>Failure</p></div>
       case Some(Success(resp)) =>
         metadata := JSON.parse(resp.responseText).asInstanceOf[js.Array[CountryMetadata]]
-        val idx = (newDate.toEpochDay() - oldDate.toEpochDay()).toInt
+
+        val idx = if (index == -1) (newDate.toEpochDay() - oldDate.toEpochDay()).toInt else index
         val flagSrc = metadata.value(idx).flagSrc
         val countryName: String = metadata.value(idx).countryName
         val capitalName: String = metadata.value(idx).capital
@@ -179,6 +180,6 @@ object ACapitalADayClient {
   }
 
   def main(args: Array[String]): Unit = {
-    dom.render(org.scalajs.dom.document.body, mainElement)
+    dom.render(org.scalajs.dom.document.body, mainElement(js.Dynamic.global.window.index.asInstanceOf[Int]))
   }
 }
