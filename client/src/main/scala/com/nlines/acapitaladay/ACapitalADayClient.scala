@@ -28,10 +28,14 @@ trait CountryMetadata extends js.Object {
   val capital: String = js.native
 }
 
+object CountryConstants {
+  val NumCountries: Int = 193
+}
+
 object ACapitalADayClient {
-  val capital: Array[Var[String]] = Array.fill(193)(Var[String](""))
+  val capital: Array[Var[String]] = Array.fill(CountryConstants.NumCountries)(Var[String](""))
   val correctCapital: Var[String] = Var[String]("")
-  val capitalGuess: Array[Var[String]] = Array.fill(193)(Var[String](""))
+  val capitalGuess: Array[Var[String]] = Array.fill(CountryConstants.NumCountries)(Var[String](""))
   val capitalGuessBoxClass: Var[String] = Var[String]("form-control is-valid")
   val metadata: Var[js.Array[CountryMetadata]] = Var[js.Array[CountryMetadata]](js.Array())
   val index: Var[Int] = Var[Int](-1)
@@ -143,11 +147,10 @@ object ACapitalADayClient {
       case Some(Success(resp)) =>
         metadata := JSON.parse(resp.responseText).asInstanceOf[js.Array[CountryMetadata]]
 
-        val idx = if (index.bind == -1) (newDate.toEpochDay() - oldDate.toEpochDay()).toInt else index.bind
-        val flagSrc = metadata.value(idx).flagSrc
-        val countryName: String = metadata.value(idx).countryName
-        val capitalName: String = metadata.value(idx).capital
-        val countryUrl: String = metadata.value(idx).countryUrl
+        val flagSrc = metadata.value(index.value).flagSrc
+        val countryName: String = metadata.value(index.value).countryName
+        val capitalName: String = metadata.value(index.value).capital
+        val countryUrl: String = metadata.value(index.value).countryUrl
         correctCapital := capitalName
 
         <div class="container">
@@ -180,7 +183,9 @@ object ACapitalADayClient {
   }
 
   def main(args: Array[String]): Unit = {
-    index := js.Dynamic.global.window.index.asInstanceOf[Int]
+    //val idx = if (js.Dynamic.global.window.index.asInstanceOf[Int] == -1) (newDate.toEpochDay() - oldDate.toEpochDay()).toInt else index.bind
+    val jsIndex = js.Dynamic.global.window.index.asInstanceOf[Int]
+    index := (if (jsIndex == -1) (newDate.toEpochDay() - oldDate.toEpochDay()).toInt else jsIndex)
     dom.render(org.scalajs.dom.document.body, mainElement)
   }
 }
