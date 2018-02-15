@@ -51,7 +51,13 @@ object DownloadFlags {
     trs.map(tr => {
       if(tr.text.contains("Capital")) (tr >?> text("td > a"))
       else None
-    }).flatten.head
+    }).flatten.headOption.getOrElse {
+      val errMsg = s"Could not find capital for ${countryName}"
+      println(errMsg)
+      if (countryName == "South Africa") "Cape Town"
+      else if (countryName == "Sri Lanka") "Sri Jayawardenepura Kotte"
+      else throw new Exception(errMsg)
+    }
   }
 
   def main(args: Array[String]): Unit = {

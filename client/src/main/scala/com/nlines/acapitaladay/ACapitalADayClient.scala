@@ -147,10 +147,10 @@ object ACapitalADayClient {
       case Some(Success(resp)) =>
         metadata := JSON.parse(resp.responseText).asInstanceOf[js.Array[CountryMetadata]]
 
-        val flagSrc = metadata.value(index.value).flagSrc
-        val countryName: String = metadata.value(index.value).countryName
-        val capitalName: String = metadata.value(index.value).capital
-        val countryUrl: String = metadata.value(index.value).countryUrl
+        val flagSrc = metadata.value(index.bind).flagSrc
+        val countryName: String = metadata.value(index.bind).countryName
+        val capitalName: String = metadata.value(index.bind).capital
+        val countryUrl: String = metadata.value(index.bind).countryUrl
         correctCapital := capitalName
 
         <div class="container">
