@@ -160,12 +160,18 @@ object ACapitalADayClient {
             <div class="col-sm-3">
               <div class="row h-100 align-items-center">
                 <div class="col">
-                  <button type="button" class="btn btn-default">
+                  <button type="button" class="btn btn-default"
+                    onclick={event: Event =>
+                      index := 0
+                    }>
                     <span class="oi oi-media-step-backward"></span>
                   </button>
                 </div>
                 <div class="col">
-                  <button type="button" class="btn btn-default">
+                  <button type="button" class="btn btn-default"
+                    onclick={event: Event =>
+                      index := scala.math.max(index.value - 1, 0)
+                    }>
                     <span class="oi oi-arrow-left"></span>
                   </button>
                 </div>
@@ -189,12 +195,18 @@ object ACapitalADayClient {
             <div class="col-sm-3">
               <div class="row h-100 align-items-center">
                 <div class="col">
-                  <button type="button" class="btn btn-default">
+                  <button type="button" class="btn btn-default"
+                    onclick={event: Event =>
+                      index := scala.math.min(index.value + 1, (CountryConstants.NumCountries-1))
+                    }>
                     <span class="oi oi-arrow-right"></span>
                   </button>
                 </div>
                 <div class="col">
-                  <button type="button" class="btn btn-default">
+                  <button type="button" class="btn btn-default"
+                    onclick={event: Event =>
+                      index := CountryConstants.NumCountries-1
+                    }>
                     <span class="oi oi-media-step-forward"></span>
                   </button>
                 </div>
