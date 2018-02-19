@@ -158,7 +158,7 @@ object ACapitalADayClient {
             <div class="col">
             </div>
             <div class="col-sm-3">
-              <div class="row h-100 align-items-center">
+              <div class="row">
                 <div class="col">
                   <button type="button" class="btn btn-default"
                     onclick={event: Event =>
@@ -193,7 +193,7 @@ object ACapitalADayClient {
               { giveUpButton(capitalName).bind }
             </div>
             <div class="col-sm-3">
-              <div class="row h-100 align-items-center">
+              <div class="row">
                 <div class="col">
                   <button type="button" class="btn btn-default"
                     onclick={event: Event =>
