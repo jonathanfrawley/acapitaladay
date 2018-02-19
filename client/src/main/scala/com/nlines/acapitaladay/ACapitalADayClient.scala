@@ -41,7 +41,7 @@ object ACapitalADayClient {
   val index: Var[Int] = Var[Int](-1)
 
   // TODO: Change this to be more clever
-  val startDate = "2017-11-18"
+  val startDate = "2017-11-17"
   val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
   val oldDate = LocalDate.parse(startDate, formatter)
   val currentDate = LocalDate.now().format(formatter)
