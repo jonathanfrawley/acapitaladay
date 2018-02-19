@@ -154,8 +154,22 @@ object ACapitalADayClient {
         correctCapital := capitalName
 
         <div class="container">
-          <div class="row">
+          <div class="row h-100">
             <div class="col">
+            </div>
+            <div class="col-sm-3">
+              <div class="row h-100 align-items-center">
+                <div class="col">
+                  <button type="button" class="btn btn-default">
+                    <span class="oi oi-media-step-backward"></span>
+                  </button>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-default">
+                    <span class="oi oi-arrow-left"></span>
+                  </button>
+                </div>
+              </div>
             </div>
             <div class="col-sm-5">
               <div class="row">
@@ -172,12 +186,26 @@ object ACapitalADayClient {
               { capitalGuessDiv.bind }
               { giveUpButton(capitalName).bind }
             </div>
+            <div class="col-sm-3">
+              <div class="row h-100 align-items-center">
+                <div class="col">
+                  <button type="button" class="btn btn-default">
+                    <span class="oi oi-arrow-right"></span>
+                  </button>
+                </div>
+                <div class="col">
+                  <button type="button" class="btn btn-default">
+                    <span class="oi oi-media-step-forward"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
             <div class="col">
             </div>
           </div>
 
           <!-- Image stuff: Disabled as not finished. -->
-          { flagDiv.bind }
+          <!--{ flagDiv.bind }-->
         </div>
     }
   }
