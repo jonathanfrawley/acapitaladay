@@ -4,6 +4,9 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Parse._
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.model.Document
 import play.api.libs.json._
+import sys.process._
+import java.net.URL
+import java.io.File
 
 object DownloadFlags {
   val browser = JsoupBrowser()
@@ -27,13 +30,10 @@ object DownloadFlags {
 
   def parseFlagSrc(doc: Document): Option[String] = {
     val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div > div:nth-child(1) > div:nth-child(1) > a > img"))
-                              //#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div:nth-child(1) > div > a > img
-
-
 
     e.flatMap(x => (x >?> attr("src")).map { x =>
       val replaced = x.replaceAll("thumb/", "")
-      val splitStr = if(replaced.contains("125px")) "/125px" else "/102px"
+      val splitStr = if(replaced.contains("125px")) "/125px" else if(replaced.contains("102px")) "/102px" else "/95px"
       replaced.split(splitStr)(0)
     }).orElse {
       val e = (doc >?> element("#mw-content-text > div > table.infobox.geography.vcard > tbody > tr:nth-child(2) > td > div:nth-child(1) > div > a > img")).flatMap { x =>
@@ -44,6 +44,19 @@ object DownloadFlags {
       println(s"e : ${e}")
       e
     }
+  }
+
+  def downloadFlag(url: String, countryName: String): String = {
+    val flagName = url.split("/").last
+    val filename = s"server/public/images/flags/${countryName}.svg"
+    println(s"Downloading <https:${url}>")
+    new URL(s"https:${url}") #> new File(filename) !!
+
+    s"/assets/images/flags/${countryName}.svg"
+  }
+
+  def downloadFlags(origUrlCountryNameTuples: Seq[(String, String)]): Seq[String] = {
+    origUrlCountryNameTuples.map{ case (url: String, countryName: String) => downloadFlag(url, countryName) }
   }
 
   def parseCapital(doc: Document, countryName: String): String = {
@@ -68,7 +81,8 @@ object DownloadFlags {
     val countryUrls = parseCountryUrls(doc)
 
     val cDocs = countryUrls.map(browser.get(_))
-    val flagSrcs = cDocs.map(parseFlagSrc)
+    val origFlagSrcs = cDocs.map(parseFlagSrc)
+    val flagSrcs: Seq[String] = downloadFlags((origFlagSrcs.flatten zip (0 until countryNames.length).toSeq.map("%03d".format(_))).toSeq)
 
     val capitals = cDocs.zip(countryNames).map(x => parseCapital(x._1, x._2))
 
