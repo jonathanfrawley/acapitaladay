@@ -9,9 +9,14 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     guice,
     specs2 % Test
   ),
+  name := "acapitaladay",
+  maintainer := "Jonathan Frawley <jmf@9lines.org>",
+  packageSummary := "A capital a day - web service to learn a new capital every day",
+  packageDescription := "Capitals for everyone!",
+
   // Compile the project before generating Eclipse files, so that generated .scala or .class files for views and routes are present
   EclipseKeys.preTasks := Seq(compile in Compile)
-).enablePlugins(PlayScala).
+).enablePlugins(PlayScala, DebianPlugin).
   dependsOn(sharedJvm)
 
 lazy val client = (project in file("client")).settings(commonSettings).settings(
@@ -45,5 +50,4 @@ lazy val commonSettings = Seq(
 
 // loads the server project at sbt startup
 onLoad in Global := (onLoad in Global).value andThen {s: State => "project server" :: s}
-
 
