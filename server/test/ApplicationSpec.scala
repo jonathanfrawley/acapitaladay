@@ -21,7 +21,7 @@ class ApplicationSpec() extends PlaySpecification {
 
       status(home) must equalTo(OK)
       contentType(home) must beSome.which(_ == "text/html")
-      contentAsString(home) must contain ("shouts out")
+      contentAsString(home) must contain ("Learn a new capital every day")
     }
   }
 }

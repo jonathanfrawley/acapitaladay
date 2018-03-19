@@ -15,7 +15,7 @@ class IntegrationSpec extends Specification {
 
       browser.goTo("http://localhost:" + port)
 
-      browser.pageSource must contain("shouts out")
+      browser.pageSource must contain("Learn a new capital every day")
     }
   }
 }
