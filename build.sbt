@@ -17,7 +17,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
   rpmVendor := "9lines.org",
   rpmUrl := Some("https://9lines.org"),
   rpmLicense := Some("Proprietary"),
-  rpmRequirements := Seq("nginx java-1.8.0-openjdk-devel")
+  rpmRequirements := Seq("nginx java-1.8.0-openjdk-devel"),
   // Compile the project before generating Eclipse files, so that generated .scala or .class files for views and routes are present
   EclipseKeys.preTasks := Seq(compile in Compile)
 ).enablePlugins(PlayScala, RpmPlugin).
