@@ -24,8 +24,6 @@ jobs:
     steps:
       - checkout
 
-      - run: sbt rpm:packageBin
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -33,12 +31,18 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - sudo apt-get update; sudo apt-get install rpmbuild
+
       - run: cat /dev/null | sbt test:compile
+
+      # run tests!
+      - run: cat /dev/null | sbt test:test
+
+      # Package!
+      - run: sbt rpm:packageBin
 
       - save_cache:
           paths:
             - ~/.m2
+            - /var/cache/apt/archives
           key: v1-dependencies--{{ checksum "build.sbt" }}
-
-      # run tests!
-      - run: cat /dev/null | sbt test:test
