@@ -1,5 +1,4 @@
-# acapitaladay
-[![CircleCI](https://circleci.com/gh/df3n5/acapitaladay/tree/master.svg?style=svg)](https://circleci.com/gh/df3n5/acapitaladay/tree/master)
+# acapitaladay [![CircleCI](https://circleci.com/gh/df3n5/acapitaladay/tree/master.svg?style=svg)](https://circleci.com/gh/df3n5/acapitaladay/tree/master)
 A simple web application that helps you learn the capitals of the countries of the world.
 Shows a new country every day and allows you to guess the capital.
 
