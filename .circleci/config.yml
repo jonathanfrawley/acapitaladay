@@ -46,3 +46,6 @@ jobs:
             - ~/.m2
             - /var/cache/apt/archives
           key: v1-dependencies--{{ checksum "build.sbt" }}
+      - store_artifacts:
+          path: /home/circleci/repo/server/target/rpm/RPMS/noarch/acapitaladay-0.1-2.noarch.rpm
+          destination: RPM package
