@@ -31,7 +31,7 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - sudo apt-get update; sudo apt-get install rpmbuild
+      - run: sudo apt-get update; sudo apt-get install rpmbuild
 
       - run: cat /dev/null | sbt test:compile
 
