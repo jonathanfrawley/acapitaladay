@@ -1,0 +1,5 @@
+ln -sv ${RPM_INSTALL_PREFIX}/usr/share/${{app_name}}/nginx.conf /etc/nginx/conf.d/${{app_name}}.conf
+systemctl reload nginx
+ln -sv ${RPM_INSTALL_PREFIX}/usr/share/${{app_name}}/systemd.service /etc/systemd/system/${{app_name}}.service
+systemctl daemon-reload
+systemctl start ${{app_name}}.service

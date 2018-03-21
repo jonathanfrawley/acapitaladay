@@ -9,7 +9,7 @@ lazy val server = (project in file("server")).settings(commonSettings).settings(
     guice,
     specs2 % Test
   ),
-  name := "acapitaladay",
+  name := "capitaladay",
   maintainer := "Jonathan Frawley <jmf@9lines.org>",
   packageSummary := "A capital a day - web service to learn a new capital every day",
   packageDescription := "Capitals for everyone!",
