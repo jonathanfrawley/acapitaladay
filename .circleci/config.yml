@@ -41,8 +41,8 @@ jobs:
       # Package!
       - run: sbt rpm:packageBin
       - store_artifacts:
-          path: /home/circleci/repo/server/target/rpm/RPMS/noarch/acapitaladay-0.1-2.noarch.rpm
-          destination: acapitaladay-latest.rpm
+          path: /home/circleci/repo/server/target/rpm/RPMS/noarch/capitaladay-0.1-2.noarch.rpm
+          destination: capitaladay-0.1.2.rpm
 
       - save_cache:
           paths:
