@@ -1,4 +1,0 @@
-rm -vf /etc/nginx/conf.d/${{app_name}}.conf
-systemctl stop ${{app_name}}.service
-rm -vf /etc/systemd/system/${{app_name}}.service
-systemctl daemon-reload
